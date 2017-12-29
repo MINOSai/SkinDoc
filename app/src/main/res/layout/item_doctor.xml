@@ -62,8 +62,8 @@
 
             <ImageView
                 android:id="@+id/img_doctor_img_patient"
-                android:layout_width="100"
-                android:layout_height="125"
+                android:layout_width="100dp"
+                android:layout_height="125dp"
                 app:layout_constraintBottom_toTopOf="@+id/view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

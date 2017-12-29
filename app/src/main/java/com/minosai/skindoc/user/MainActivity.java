@@ -1,5 +1,6 @@
 package com.minosai.skindoc.user;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.minosai.skindoc.R;
+import com.minosai.skindoc.auth.AuthActivity;
+import com.minosai.skindoc.chat.ChatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        startActivity(new Intent(MainActivity.this, AuthActivity.class));
     }
 
     @Override
