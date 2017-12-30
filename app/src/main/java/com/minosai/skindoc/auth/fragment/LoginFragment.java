@@ -1,8 +1,9 @@
-package com.minosai.skindoc.auth;
+package com.minosai.skindoc.auth.fragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import com.minosai.skindoc.api.ApiInterface;
 import com.minosai.skindoc.auth.data.AuthResponse;
 import com.minosai.skindoc.auth.data.LoginCredentials;
 import com.minosai.skindoc.user.MainActivity;
+import com.minosai.skindoc.user.UserDataStore;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,9 +39,9 @@ public class LoginFragment extends Fragment {
 
     private FragmentActivity listener;
 
-    private TextView textUserName, textPassword;
+    private TextView textUserName, textPassword, textBtnSignup;
     private FloatingActionButton fab;
-    private Button btnSignup;
+    private Button btnSignup, btnLogin;
 
     private LoginCredentials loginCredentials = new LoginCredentials();
 
@@ -65,12 +67,14 @@ public class LoginFragment extends Fragment {
 
         textUserName = (TextView) view.findViewById(R.id.txt_login_username);
         textPassword = (TextView) view.findViewById(R.id.txt_login_password);
+        textBtnSignup = (TextView) view.findViewById(R.id.txt_login_signup);
 
         fab = (FloatingActionButton) view.findViewById(R.id.fab_login);
 
+        btnLogin = (Button) view.findViewById(R.id.btn_login);
         btnSignup = (Button) view.findViewById(R.id.btn_login_signup);
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loginCredentials.setUser(textUserName.getText().toString());
@@ -79,7 +83,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        btnSignup.setOnClickListener(new View.OnClickListener() {
+        textBtnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentTransaction ft =  getFragmentManager().beginTransaction();
@@ -100,8 +104,9 @@ public class LoginFragment extends Fragment {
                 if(response.isSuccessful()){
                     AuthResponse authResponse = response.body();
                     Toast.makeText(getContext(), authResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    saveToken(authResponse.getToken());
+                    UserDataStore.getInstance().saveToken(getContext(), authResponse.getToken());
                     loginProgress.dismiss();
+                    startActivity(new Intent(getContext(), MainActivity.class));
                 } else {
                     Snackbar.make(getView(), "An error occurred", Snackbar.LENGTH_LONG)
                             .setAction("retry", new View.OnClickListener() {
@@ -127,13 +132,6 @@ public class LoginFragment extends Fragment {
             }
         });
         //        startActivity(new Intent(getActivity(), MainActivity.class));
-    }
-
-    private void saveToken(String token) {
-        SharedPreferences preferences = getContext().getSharedPreferences(MainActivity.TOKEN_PREF, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(MainActivity.TOKEN_PREF, token);
-        editor.commit();
     }
 
     @Override

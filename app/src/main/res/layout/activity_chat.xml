@@ -17,20 +17,22 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="115dp"
         android:layout_weight="1"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/txt_chat_message"
+        <EditText
+            android:id="@+id/txt_chat_text"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/background_light"
-            android:hint="Type a message.."
+            android:background="@android:color/white"
+            android:ems="10"
+            android:hint="Type a message..."
+            android:inputType="textPersonName"
             android:padding="16dp" />
 
         <ImageView

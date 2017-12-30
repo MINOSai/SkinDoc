@@ -1,4 +1,4 @@
-package com.minosai.skindoc.user;
+package com.minosai.skindoc.user.fragment;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;

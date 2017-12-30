@@ -11,14 +11,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.minosai.skindoc.R;
+import com.minosai.skindoc.api.ApiClient;
+import com.minosai.skindoc.api.ApiInterface;
 import com.minosai.skindoc.auth.AuthActivity;
+import com.minosai.skindoc.auth.data.AuthResponse;
+import com.minosai.skindoc.auth.data.LogoutCredentials;
 import com.minosai.skindoc.chat.ChatActivity;
+import com.minosai.skindoc.user.data.User;
+import com.minosai.skindoc.user.utils.JWTUtils;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.POST;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TOKEN_PREF = "token-pref";
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +40,24 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SharedPreferences preferences = getApplicationContext().getSharedPreferences(TOKEN_PREF, Context.MODE_PRIVATE);
-        String token = preferences.getString(TOKEN_PREF,null);
+        String token = UserDataStore.getInstance().getToken(this);
 
         if(token == null){
             startActivity(new Intent(MainActivity.this, AuthActivity.class));
+        } else {
+            TextView textView = (TextView) findViewById(R.id.txt_test);
+            String decodedJson = null;
+            try {
+                decodedJson = JWTUtils.decoded(token);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            user = UserDataStore.getInstance().getUser(this);
+            if(user == null && decodedJson!= null) {
+                UserDataStore.getInstance().setUser(this, decodedJson);
+                user = UserDataStore.getInstance().getUser(this);
+            }
+            textView.setText(user.getFname());
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -40,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-//                startActivity(new Intent(MainActivity.this, AuthActivity.class));
+                startActivity(new Intent(MainActivity.this, AuthActivity.class));
             }
         });
     }
@@ -61,9 +87,39 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+
+        }
+
+        switch (id) {
+            case R.id.action_settings:
+                break;
+            case R.id.action_logout:
+                logoutUser();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void logoutUser() {
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<AuthResponse> call = apiInterface.logoutUser(new LogoutCredentials(UserDataStore.getInstance().getToken(getApplicationContext())));
+        call.enqueue(new Callback<AuthResponse>() {
+            @Override
+            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                if(response.isSuccessful()){
+                    AuthResponse authResponse = response.body();
+                    Toast.makeText(getApplicationContext(), authResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    UserDataStore.getInstance().clearData(getApplicationContext());
+                    startActivity(new Intent(getApplicationContext(), AuthActivity.class));
+                } else {
+                    Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

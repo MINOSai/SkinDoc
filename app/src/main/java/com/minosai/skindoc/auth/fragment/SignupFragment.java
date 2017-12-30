@@ -1,8 +1,9 @@
-package com.minosai.skindoc.auth;
+package com.minosai.skindoc.auth.fragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.minosai.skindoc.api.ApiInterface;
 import com.minosai.skindoc.auth.data.AuthResponse;
 import com.minosai.skindoc.auth.data.SignupCredentials;
 import com.minosai.skindoc.user.MainActivity;
+import com.minosai.skindoc.user.UserDataStore;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,11 +42,11 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
 
     private TextView textUserName, textEmail, textPassword, textCity;
     private TextView textQualify, textDescription;
-    Button btnPatient, btnDoctor, btnLogin;
-    FloatingActionButton fab;
-    LinearLayout doctorLayout;
+    private Button btnPatient, btnDoctor, btnLogin;
+    private FloatingActionButton fab;
+    private LinearLayout doctorLayout;
 
-    SignupCredentials signupCredentials;
+    private SignupCredentials signupCredentials = new SignupCredentials();
 
     private ProgressDialog signupProgress;
 
@@ -113,6 +115,21 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                 ft.commit();
                 break;
             case R.id.fab_signup :
+                signupCredentials.setFname(textUserName.getText().toString().split(" ")[0]);
+                try {
+                    signupCredentials.setLname(textUserName.getText().toString().split(" ")[1]);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                signupCredentials.setEmail(textEmail.getText().toString());
+                signupCredentials.setPass(textPassword.getText().toString());
+                if(signupCredentials.getPortal() == null){
+                    Toast.makeText(listener, "Please choose a role.", Toast.LENGTH_SHORT).show();
+                    break;
+                } else if(signupCredentials.getPortal().matches("0")){
+                    signupCredentials.setDescription(textDescription.getText().toString());
+                    signupCredentials.setQualification(textQualify.getText().toString());
+                }
                 signup();
                 break;
         }
@@ -123,6 +140,17 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         btnDoctor.setTextColor(getResources().getColor(R.color.mBlack));
         btnPatient.setTextColor(getResources().getColor(R.color.colorAccent));
         doctorLayout.setVisibility(View.GONE);
+
+        signupCredentials.setPortal("1");
+    }
+
+
+    private void userDoctor() {
+        btnDoctor.setTextColor(getResources().getColor(R.color.colorAccent));
+        btnPatient.setTextColor(getResources().getColor(R.color.mBlack));
+        doctorLayout.setVisibility(View.VISIBLE);
+
+        signupCredentials.setPortal("0");
     }
 
     private void signup() {
@@ -136,8 +164,9 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                 if(response.isSuccessful()){
                     AuthResponse authResponse = response.body();
                     Toast.makeText(getContext(), authResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    saveToken(authResponse.getToken());
+                    UserDataStore.getInstance().saveToken(getContext(), authResponse.getToken());
                     signupProgress.dismiss();
+                    startActivity(new Intent(getContext(), MainActivity.class));
                 } else {
                     Snackbar.make(getView(), "An error occurred", Snackbar.LENGTH_LONG)
                             .setAction("retry", new View.OnClickListener() {
@@ -162,18 +191,5 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                 signupProgress.dismiss();
             }
         });
-    }
-
-    private void saveToken(String token) {
-        SharedPreferences preferences = getContext().getSharedPreferences(MainActivity.TOKEN_PREF, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(MainActivity.TOKEN_PREF, token);
-        editor.commit();
-    }
-
-    private void userDoctor() {
-        btnDoctor.setTextColor(getResources().getColor(R.color.colorAccent));
-        btnPatient.setTextColor(getResources().getColor(R.color.mBlack));
-        doctorLayout.setVisibility(View.VISIBLE);
     }
 }

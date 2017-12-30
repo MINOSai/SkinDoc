@@ -3,9 +3,9 @@ package com.minosai.skindoc.auth;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.FrameLayout;
 
 import com.minosai.skindoc.R;
+import com.minosai.skindoc.auth.fragment.LoginFragment;
 
 public class AuthActivity extends AppCompatActivity {
 
