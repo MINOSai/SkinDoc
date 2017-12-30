@@ -1,11 +1,13 @@
 package com.minosai.skindoc.auth;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -14,9 +16,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.minosai.skindoc.R;
+import com.minosai.skindoc.api.ApiClient;
+import com.minosai.skindoc.api.ApiInterface;
+import com.minosai.skindoc.auth.data.AuthResponse;
+import com.minosai.skindoc.auth.data.LoginCredentials;
 import com.minosai.skindoc.user.MainActivity;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by minos.ai on 29/12/17.
@@ -30,11 +41,17 @@ public class LoginFragment extends Fragment {
     private FloatingActionButton fab;
     private Button btnSignup;
 
+    private LoginCredentials loginCredentials = new LoginCredentials();
+
+    private ProgressDialog loginProgress;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof Activity){
             this.listener = (FragmentActivity) context;
+            loginProgress = new ProgressDialog(context);
+            loginProgress.setMessage("Logging you in...");
         }
     }
 
@@ -56,9 +73,9 @@ public class LoginFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String userName = textUserName.getText().toString();
-                String password = textPassword.getText().toString();
-                login(userName, password);
+                loginCredentials.setUser(textUserName.getText().toString());
+                loginCredentials.setPass(textPassword.getText().toString());
+                login();
             }
         });
 
@@ -72,9 +89,51 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    private void login(String userName, String password) {
-        //TODO: login
-        startActivity(new Intent(getActivity(), MainActivity.class));
+    private void login() {
+        loginProgress.show();
+
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<AuthResponse> call = apiInterface.loginUser(loginCredentials);
+        call.enqueue(new Callback<AuthResponse>() {
+            @Override
+            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                if(response.isSuccessful()){
+                    AuthResponse authResponse = response.body();
+                    Toast.makeText(getContext(), authResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    saveToken(authResponse.getToken());
+                    loginProgress.dismiss();
+                } else {
+                    Snackbar.make(getView(), "An error occurred", Snackbar.LENGTH_LONG)
+                            .setAction("retry", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    login();
+                                }
+                            }).show();
+                    loginProgress.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthResponse> call, Throwable t) {
+                Snackbar.make(getView(), "An error occurred", Snackbar.LENGTH_LONG)
+                        .setAction("retry", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                login();
+                            }
+                        }).show();
+                loginProgress.dismiss();
+            }
+        });
+        //        startActivity(new Intent(getActivity(), MainActivity.class));
+    }
+
+    private void saveToken(String token) {
+        SharedPreferences preferences = getContext().getSharedPreferences(MainActivity.TOKEN_PREF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(MainActivity.TOKEN_PREF, token);
+        editor.commit();
     }
 
     @Override

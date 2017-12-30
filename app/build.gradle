@@ -29,4 +29,10 @@ dependencies {
     implementation 'com.android.support:cardview-v7:26.1.0'
 
     compile 'de.hdodenhof:circleimageview:2.2.0'
+
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+    compile 'com.auth0.android:jwtdecode:1.1.1'
 }

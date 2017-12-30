@@ -20,4 +20,9 @@ public class AuthActivity extends AppCompatActivity {
         ft.replace(R.id.frame_auth, new LoginFragment());
         ft.commit();
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }
