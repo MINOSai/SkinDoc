@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/imageView"
@@ -101,6 +100,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
+        android:background="@android:color/holo_red_light"
         android:text="login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -114,7 +114,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="or"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_login" />
@@ -127,7 +127,6 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/holo_red_light"
-        android:drawableLeft="@drawable/google_white"
         android:text="sign in with google"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
@@ -142,7 +141,7 @@
         android:gravity="center"
         android:padding="16dp"
         android:text="New user? signup here."
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

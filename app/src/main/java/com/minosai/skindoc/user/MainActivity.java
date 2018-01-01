@@ -20,6 +20,7 @@ import com.minosai.skindoc.api.ApiInterface;
 import com.minosai.skindoc.auth.AuthActivity;
 import com.minosai.skindoc.auth.data.AuthResponse;
 import com.minosai.skindoc.auth.data.LogoutCredentials;
+import com.minosai.skindoc.camera.CameraActivity;
 import com.minosai.skindoc.chat.ChatActivity;
 import com.minosai.skindoc.user.data.User;
 import com.minosai.skindoc.user.utils.JWTUtils;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                startActivity(new Intent(MainActivity.this, AuthActivity.class));
+                startActivity(new Intent(MainActivity.this, CameraActivity.class));
             }
         });
     }
@@ -121,5 +122,10 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 }
