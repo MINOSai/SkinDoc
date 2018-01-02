@@ -1,11 +1,8 @@
 package com.minosai.skindoc.user;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -21,14 +18,13 @@ import com.minosai.skindoc.auth.AuthActivity;
 import com.minosai.skindoc.auth.data.AuthResponse;
 import com.minosai.skindoc.auth.data.LogoutCredentials;
 import com.minosai.skindoc.camera.CameraActivity;
-import com.minosai.skindoc.chat.ChatActivity;
 import com.minosai.skindoc.user.data.User;
 import com.minosai.skindoc.user.utils.JWTUtils;
+import com.minosai.skindoc.user.utils.UserDataStore;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.POST;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         if(token == null){
             startActivity(new Intent(MainActivity.this, AuthActivity.class));
         } else {
-            TextView textView = (TextView) findViewById(R.id.txt_test);
             String decodedJson = null;
             try {
                 decodedJson = JWTUtils.decoded(token);
@@ -58,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
                 UserDataStore.getInstance().setUser(this, decodedJson);
                 user = UserDataStore.getInstance().getUser(this);
             }
-            textView.setText(user.getFname());
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

@@ -1,4 +1,4 @@
-package com.minosai.skindoc.user;
+package com.minosai.skindoc.user.utils;
 
 import java.lang.reflect.Type;
 import android.content.Context;
@@ -20,7 +20,7 @@ public class UserDataStore {
     public static final String SECRET = "b'k5AfGCquSoeAyGA6+jKWBISJ5Gu7T0TomabJADn+EcU='";
     public static final String PREF_USER_DETAILS = "com.minosai.skindoc.user-details";
 
-    User user;
+    User user = null;
     String token;
 
     private SharedPreferences preferences;
@@ -44,6 +44,13 @@ public class UserDataStore {
         editor = preferences.edit();
         editor.putString(UserDataStore.PREF_USER_TOKEN, token);
         editor.commit();
+        String decodedJson = null;
+        try {
+            decodedJson = JWTUtils.decoded(token);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        setUser(context, decodedJson);
         this.token = token;
     }
 
@@ -65,9 +72,13 @@ public class UserDataStore {
 
     public User getUser(Context context) {
         if(user == null) {
-            preferences = context.getSharedPreferences(PREF_USER, Context.MODE_PRIVATE);
-            String json = preferences.getString(PREF_USER_DETAILS, null);
-            user = gson.fromJson(json, type);
+            try {
+                preferences = context.getSharedPreferences(PREF_USER, Context.MODE_PRIVATE);
+                String json = preferences.getString(PREF_USER_DETAILS, null);
+                user = gson.fromJson(json, type);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return user;
     }

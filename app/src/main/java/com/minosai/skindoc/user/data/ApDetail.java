@@ -24,7 +24,7 @@ public class ApDetail {
     @Expose
     private String response;
 
-    public String getSymptoms() {
+    public String getSymghgptoms() {
         return symptoms;
     }
 

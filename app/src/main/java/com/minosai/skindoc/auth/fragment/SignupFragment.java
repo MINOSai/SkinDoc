@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -26,7 +25,7 @@ import com.minosai.skindoc.api.ApiInterface;
 import com.minosai.skindoc.auth.data.AuthResponse;
 import com.minosai.skindoc.auth.data.SignupCredentials;
 import com.minosai.skindoc.user.MainActivity;
-import com.minosai.skindoc.user.UserDataStore;
+import com.minosai.skindoc.user.utils.UserDataStore;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -113,20 +113,16 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
         mCameraStateCB = new CameraDevice.StateCallback() {
             @Override
             public void onOpened(CameraDevice camera) {
-                Toast.makeText(getContext(), "onOpened", Toast.LENGTH_SHORT).show();
-
                 mCameraDevice = camera;
                 mHandler.sendEmptyMessage(MSG_CAMERA_OPENED);
             }
 
             @Override
             public void onDisconnected(CameraDevice camera) {
-                Toast.makeText(getContext(), "onDisconnected", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(CameraDevice camera, int error) {
-                Toast.makeText(getContext(), "onError", Toast.LENGTH_SHORT).show();
             }
         };
 
