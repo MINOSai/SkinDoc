@@ -28,6 +28,9 @@ public class User {
     @SerializedName("portal")
     @Expose
     private String portal;
+    @SerializedName("portal")
+    @Expose
+    private List<String> plist = null;
     @SerializedName("img")
     @Expose
     private String img;
@@ -40,6 +43,47 @@ public class User {
     @SerializedName("valid")
     @Expose
     private Boolean valid;
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("qualifications")
+    @Expose
+    private String qualification;
+    @SerializedName("availability")
+    @Expose
+    private Boolean avaliability;
+
+    public List<String> getPlist() {
+        return plist;
+    }
+
+    public void setPlist(List<String> plist) {
+        this.plist = plist;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(String qualification) {
+        this.qualification = qualification;
+    }
+
+    public Boolean getAvaliability() {
+        return avaliability;
+    }
+
+    public void setAvaliability(Boolean avaliability) {
+        this.avaliability = avaliability;
+    }
 
     public String getUser() {
         return user;

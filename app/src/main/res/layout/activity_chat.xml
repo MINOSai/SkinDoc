@@ -8,20 +8,15 @@
     tools:context="com.minosai.skindoc.chat.ChatActivity">
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/chat_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:layout_weight="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </android.support.v7.widget.RecyclerView>
-
-    <include
-        layout="@layout/item_chat_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="match_parent"

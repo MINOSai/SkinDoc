@@ -39,9 +39,6 @@ public class MainActivityFragment extends Fragment {
 
     TextView txtEmpty;
 
-    public MainActivityFragment() {
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -54,8 +51,8 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        txtEmpty = (TextView) view.findViewById(R.id.txt_ap_empty);
 
+        txtEmpty = (TextView) view.findViewById(R.id.txt_ap_empty);
         recyclerView = (RecyclerView) view.findViewById(R.id.user_recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -63,16 +60,15 @@ public class MainActivityFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                apDetails = UserDataStore.getInstance().getUser(getContext()).getApDetails();
                 if(apDetails.isEmpty()) {
                     txtEmpty.setVisibility(View.VISIBLE);
                 } else {
                     txtEmpty.setVisibility(View.GONE);
                     if(UserDataStore.getInstance().getUser(getContext()).getPortal().equals("0")) {
-                        doctorAdapter = new DoctorAdapter(apDetails);
+                        doctorAdapter = new DoctorAdapter(UserDataStore.getInstance().getUser(getContext()).getPlist(), getActivity());
                         recyclerView.setAdapter(doctorAdapter);
                     } else {
-                        patientAdapter = new PatientAdapter(apDetails);
+                        patientAdapter = new PatientAdapter(UserDataStore.getInstance().getUser(getContext()).getApDetails(), getContext());
                         recyclerView.setAdapter(patientAdapter);
                     }
                 }
