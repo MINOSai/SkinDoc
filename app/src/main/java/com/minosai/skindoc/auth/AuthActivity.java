@@ -1,10 +1,13 @@
 package com.minosai.skindoc.auth;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.minosai.skindoc.R;
+import com.minosai.skindoc.auth.fragment.AuthFragment;
 import com.minosai.skindoc.auth.fragment.LoginFragment;
 
 public class AuthActivity extends AppCompatActivity {
@@ -17,7 +20,8 @@ public class AuthActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_auth, new LoginFragment());
+        ft.replace(R.id.frame_auth, new AuthFragment(), "AuthFragment");
+        ft.addToBackStack("AuthFragmentTag");
         ft.commit();
     }
 

@@ -31,7 +31,7 @@ public class MainActivityFragment extends Fragment {
 
     private FragmentActivity listener;
 
-    List<ApDetail> apDetails;
+    List<ApDetail> apDetails = new ArrayList<>();
 
     RecyclerView recyclerView;
     DoctorAdapter doctorAdapter;
@@ -64,7 +64,7 @@ public class MainActivityFragment extends Fragment {
                     txtEmpty.setVisibility(View.VISIBLE);
                 } else {
                     txtEmpty.setVisibility(View.GONE);
-                    if(UserDataStore.getInstance().getUser(getContext()).getPortal().equals("0")) {
+                    if(UserDataStore.getInstance().getUser(getContext()).getPortal() == 0) {
                         doctorAdapter = new DoctorAdapter(UserDataStore.getInstance().getUser(getContext()).getPlist(), getActivity());
                         recyclerView.setAdapter(doctorAdapter);
                     } else {

@@ -23,7 +23,7 @@ import com.minosai.skindoc.api.ApiClient;
 import com.minosai.skindoc.api.ApiInterface;
 import com.minosai.skindoc.auth.AuthActivity;
 import com.minosai.skindoc.auth.data.AuthResponse;
-import com.minosai.skindoc.auth.data.LogoutCredentials;
+import com.minosai.skindoc.auth.data.TokenString;
 import com.minosai.skindoc.camera.CameraActivity;
 import com.minosai.skindoc.user.data.User;
 import com.minosai.skindoc.user.fragment.MainActivityFragment;
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private User user;
 
     private GoogleSignInClient mGoogleSignInClient;
+    private GoogleSignInAccount account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,36 +54,36 @@ public class MainActivity extends AppCompatActivity {
                 .requestIdToken("55733305212-ak8qek9fvkuaopqvhcf3qe9utme29np6.apps.googleusercontent.com")
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        account = GoogleSignIn.getLastSignedInAccount(this);
 
-        if(account != null){
-            Log.i("Google user details", account.getId());
-            Log.i("Google user det-token", account.getIdToken());
-        } else {
-            startActivity(new Intent(MainActivity.this, AuthActivity.class));
-        }
-
-//        String token = UserDataStore.getInstance().getToken(this);
-//
-//        if(token == null){
-//            startActivity(new Intent(MainActivity.this, AuthActivity.class));
+//        if(account != null){
+//            Log.i("Google user details", account.getId());
+//            Log.i("Google user det-token", account.getIdToken());
 //        } else {
-//            String decodedJson = null;
-//            try {
-//                decodedJson = JWTUtils.decoded(token);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            user = UserDataStore.getInstance().getUser(this);
-//            if(user == null && decodedJson!= null) {
-//                UserDataStore.getInstance().setUser(this, decodedJson);
-//                user = UserDataStore.getInstance().getUser(this);
-//            }
-//
-//            android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//            ft.replace(R.id.frame_user, new MainActivityFragment());
-//            ft.commit();
+//            startActivity(new Intent(MainActivity.this, AuthActivity.class));
 //        }
+
+        String token = UserDataStore.getInstance().getToken(this);
+
+        if(token == null){
+            startActivity(new Intent(MainActivity.this, AuthActivity.class));
+        } else {
+            String decodedJson = null;
+            try {
+                decodedJson = JWTUtils.decoded(token);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            user = UserDataStore.getInstance().getUser(this);
+            if(user == null && decodedJson!= null) {
+                UserDataStore.getInstance().setUser(this, decodedJson);
+                user = UserDataStore.getInstance().getUser(this);
+            }
+
+            android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frame_user, new MainActivityFragment());
+            ft.commit();
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -97,23 +98,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-
-        }
-
         switch (id) {
             case R.id.action_settings:
                 break;
@@ -125,34 +116,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logoutUser() {
-//        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-//        Call<AuthResponse> call = apiInterface.logoutUser(new LogoutCredentials(UserDataStore.getInstance().getToken(getApplicationContext())));
-//        call.enqueue(new Callback<AuthResponse>() {
-//            @Override
-//            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-//                if(response.isSuccessful()){
-//                    AuthResponse authResponse = response.body();
-//                    Toast.makeText(getApplicationContext(), authResponse.getMessage(), Toast.LENGTH_SHORT).show();
-//                    UserDataStore.getInstance().clearData(getApplicationContext());
-//                    startActivity(new Intent(getApplicationContext(), AuthActivity.class));
-//                } else {
-//                    Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<AuthResponse> call, Throwable t) {
-//                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<AuthResponse> call = apiInterface.logoutUser(new TokenString(UserDataStore.getInstance().getToken(getApplicationContext())));
+        call.enqueue(new Callback<AuthResponse>() {
+            @Override
+            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                if(response.isSuccessful()){
+                    AuthResponse authResponse = response.body();
+                    Toast.makeText(getApplicationContext(), authResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    UserDataStore.getInstance().clearData(getApplicationContext());
 
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        startActivity(new Intent(MainActivity.this, AuthActivity.class));
+                    if (account != null) {
+                        mGoogleSignInClient.signOut()
+                                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        startActivity(new Intent(MainActivity.this, AuthActivity.class));
+                                    }
+                                });
                     }
-                });
+
+                    startActivity(new Intent(getApplicationContext(), AuthActivity.class));
+                } else {
+                    Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+//        if (account != null) {
+//            mGoogleSignInClient.signOut()
+//                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            startActivity(new Intent(MainActivity.this, AuthActivity.class));
+//                        }
+//                    });
+//        }
     }
 
     @Override

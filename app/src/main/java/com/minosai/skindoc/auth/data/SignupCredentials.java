@@ -5,13 +5,42 @@ package com.minosai.skindoc.auth.data;
  */
 
 public class SignupCredentials {
-    private String user;
-    private String fname;
-    private String lname;
+
     private String email;
+    private String name;
+    private String google;
     private String pass;
+    private String portal;
+    private String user;
     private String qualification;
     private String description;
+
+    public SignupCredentials() {
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getGoogle() {
+        return google;
+    }
+
+    public void setGoogle(String google) {
+        this.google = google;
+    }
 
     public String getPass() {
         return pass;
@@ -19,6 +48,22 @@ public class SignupCredentials {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public String getPortal() {
+        return portal;
+    }
+
+    public void setPortal(String portal) {
+        this.portal = portal;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public String getQualification() {
@@ -35,47 +80,5 @@ public class SignupCredentials {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    private String portal;
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public String getFname() {
-        return fname;
-    }
-
-    public void setFname(String fname) {
-        this.fname = fname;
-    }
-
-    public String getLname() {
-        return lname;
-    }
-
-    public void setLname(String lname) {
-        this.lname = lname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPortal() {
-        return portal;
-    }
-
-    public void setPortal(String portal) {
-        this.portal = portal;
     }
 }

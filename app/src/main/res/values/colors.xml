@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#9c27b0</color>
     <color name="colorPrimaryDark">#6a0080</color>
-    <color name="colorAccent">#ff6f00</color>
+    <!--<color name="colorAccent">#ff6f00</color>-->
+    <color name="colorAccent">@android:color/holo_red_light</color>
     <color name="mBlack">#000</color>
 </resources>

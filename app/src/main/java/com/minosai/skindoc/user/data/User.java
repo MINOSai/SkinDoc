@@ -13,33 +13,24 @@ public class User {
     @SerializedName("user")
     @Expose
     private String user;
-    @SerializedName("fname")
+    @SerializedName("name")
     @Expose
-    private String fname;
-    @SerializedName("lname")
+    private String name;
+    @SerializedName("google")
     @Expose
-    private String lname;
+    private String google;
     @SerializedName("email")
     @Expose
     private String email;
-    @SerializedName("address")
-    @Expose
-    private String address;
     @SerializedName("portal")
     @Expose
-    private String portal;
-    @SerializedName("portal")
+    private int portal;
+    @SerializedName("plist")
     @Expose
     private List<String> plist = null;
-    @SerializedName("img")
-    @Expose
-    private String img;
     @SerializedName("ap_details")
     @Expose
     private List<ApDetail> apDetails = null;
-    @SerializedName("history")
-    @Expose
-    private String history;
     @SerializedName("valid")
     @Expose
     private Boolean valid;
@@ -49,9 +40,38 @@ public class User {
     @SerializedName("qualifications")
     @Expose
     private String qualification;
-    @SerializedName("availability")
-    @Expose
-    private Boolean avaliability;
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getPortal() {
+        return portal;
+    }
+
+    public void setPortal(int portal) {
+        this.portal = portal;
+    }
 
     public List<String> getPlist() {
         return plist;
@@ -59,6 +79,22 @@ public class User {
 
     public void setPlist(List<String> plist) {
         this.plist = plist;
+    }
+
+    public List<ApDetail> getApDetails() {
+        return apDetails;
+    }
+
+    public void setApDetails(List<ApDetail> apDetails) {
+        this.apDetails = apDetails;
+    }
+
+    public Boolean getValid() {
+        return valid;
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid = valid;
     }
 
     public String getDescription() {
@@ -75,93 +111,5 @@ public class User {
 
     public void setQualification(String qualification) {
         this.qualification = qualification;
-    }
-
-    public Boolean getAvaliability() {
-        return avaliability;
-    }
-
-    public void setAvaliability(Boolean avaliability) {
-        this.avaliability = avaliability;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public String getFname() {
-        return fname;
-    }
-
-    public void setFname(String fname) {
-        this.fname = fname;
-    }
-
-    public String getLname() {
-        return lname;
-    }
-
-    public void setLname(String lname) {
-        this.lname = lname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPortal() {
-        return portal;
-    }
-
-    public void setPortal(String portal) {
-        this.portal = portal;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public List<ApDetail> getApDetails() {
-        return apDetails;
-    }
-
-    public void setApDetails(List<ApDetail> apDetails) {
-        this.apDetails = apDetails;
-    }
-
-    public String getHistory() {
-        return history;
-    }
-
-    public void setHistory(String history) {
-        this.history = history;
-    }
-
-    public Boolean getValid() {
-        return valid;
-    }
-
-    public void setValid(Boolean valid) {
-        this.valid = valid;
     }
 }

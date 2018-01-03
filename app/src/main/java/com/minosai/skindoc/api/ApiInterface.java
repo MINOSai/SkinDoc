@@ -2,8 +2,8 @@ package com.minosai.skindoc.api;
 
 import com.minosai.skindoc.auth.data.AuthResponse;
 import com.minosai.skindoc.auth.data.LoginCredentials;
-import com.minosai.skindoc.auth.data.LogoutCredentials;
 import com.minosai.skindoc.auth.data.SignupCredentials;
+import com.minosai.skindoc.auth.data.TokenString;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -22,5 +22,8 @@ public interface ApiInterface {
     Call<AuthResponse> signupUser(@Body SignupCredentials signupCredentials);
 
     @POST("logout")
-    Call<AuthResponse> logoutUser(@Body LogoutCredentials logoutCredentials);
+    Call<AuthResponse> logoutUser(@Body TokenString tokenString);
+
+    @POST("oauth")
+    Call<AuthResponse> oauthTest(@Body TokenString tokenString);
 }
