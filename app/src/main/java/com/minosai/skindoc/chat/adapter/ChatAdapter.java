@@ -41,10 +41,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
         if(currentMessage.getSender().equals(currentUser)) {
             holder.msgRight.setText(currentMessage.getMessage());
+            holder.timeRight.setText(currentMessage.getTime());
             holder.cardRight.setVisibility(View.VISIBLE);
             holder.cardLeft.setVisibility(View.GONE);
         } else {
             holder.msgLeft.setText(currentMessage.getMessage());
+            holder.timeLeft.setText(currentMessage.getTime());
             holder.cardLeft.setVisibility(View.VISIBLE);
             holder.cardRight.setVisibility(View.GONE);
         }

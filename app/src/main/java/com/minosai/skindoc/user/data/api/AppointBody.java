@@ -8,12 +8,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class AppointBody {
-    @SerializedName("token")
-    @Expose
     private String token;
-
-    @SerializedName("descriptin")
-    @Expose
     private String description;
 
     public AppointBody(String token, String description) {

@@ -12,7 +12,7 @@ public class SignupCredentials {
     private String pass;
     private String portal;
     private String user;
-    private String qualification;
+    private String qualifications;
     private String description;
 
     public SignupCredentials() {
@@ -66,12 +66,12 @@ public class SignupCredentials {
         this.user = user;
     }
 
-    public String getQualification() {
-        return qualification;
+    public String getQualifications() {
+        return qualifications;
     }
 
-    public void setQualification(String qualification) {
-        this.qualification = qualification;
+    public void setQualifications(String qualifications) {
+        this.qualifications = qualifications;
     }
 
     public String getDescription() {

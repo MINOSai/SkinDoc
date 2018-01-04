@@ -20,13 +20,16 @@ import com.minosai.skindoc.chat.adapter.ChatAdapter;
 import com.minosai.skindoc.chat.data.Message;
 import com.minosai.skindoc.user.utils.UserDataStore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
 
     public static final String USER_NODE = "user_node";
     private static final String TAG  = "ChatActivity";
+    public static final String RECIEVER = "reciever";
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -48,7 +51,7 @@ public class ChatActivity extends AppCompatActivity {
 
         chatNode = getIntent().getStringExtra(USER_NODE);
 
-        getSupportActionBar().setTitle(chatNode.split("-")[1]);
+        getSupportActionBar().setTitle(getIntent().getStringExtra(RECIEVER));
 
         initFirebase();
         initRecycler();
@@ -66,7 +69,8 @@ public class ChatActivity extends AppCompatActivity {
                     String key = databaseReference.push().getKey();
                     String sender = UserDataStore.getInstance().getUser(getApplicationContext()).getUser();
                     String msg = chatTextView.getText().toString();
-                    Message message = new Message(msg, sender, key);
+                    String time = new SimpleDateFormat("h:mm a").format(new Date());
+                    Message message = new Message(msg, sender, time, key);
                     databaseReference.child(key).setValue(message);
                     chatTextView.setText("");
                 }
@@ -77,6 +81,7 @@ public class ChatActivity extends AppCompatActivity {
     private void initRecycler() {
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         chatAdapter = new ChatAdapter(messages, this);
@@ -119,6 +124,7 @@ public class ChatActivity extends AppCompatActivity {
 //                    Message message = dataSnapshot.getValue(Message.class);
                     messages.add(dataSnapshot.getValue(Message.class));
                     chatAdapter.notifyDataSetChanged();
+                    recyclerView.smoothScrollToPosition(messages.size() - 1);
                 }
 
                 @Override

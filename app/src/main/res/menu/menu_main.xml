@@ -4,8 +4,14 @@
     tools:context="com.minosai.skindoc.user.MainActivity">
 
     <item
+        android:id="@+id/action_camera"
+        android:icon="@drawable/ic_camera"
+        app:showAsAction="ifRoom"
+        android:title="Camera" />
+    <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"
         android:title="@string/logout"
-        app:showAsAction="never" />
+        android:icon="@drawable/logout"
+        app:showAsAction="ifRoom" />
 </menu>

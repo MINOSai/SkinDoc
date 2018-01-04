@@ -63,6 +63,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
 
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra(ChatActivity.USER_NODE, left+"-"+right);
+                intent.putExtra(ChatActivity.RECIEVER, apDetails.get(position).getDoctorName());
                 context.startActivity(intent);
             }
         });

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,12 +24,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.annotations.Expose;
 import com.minosai.skindoc.R;
 import com.minosai.skindoc.api.ApiClient;
 import com.minosai.skindoc.api.ApiInterface;
 import com.minosai.skindoc.auth.AuthActivity;
 import com.minosai.skindoc.auth.data.AuthResponse;
 import com.minosai.skindoc.auth.data.TokenString;
+import com.minosai.skindoc.camera.CameraActivity;
 import com.minosai.skindoc.user.data.User;
 import com.minosai.skindoc.user.data.api.AppointBody;
 import com.minosai.skindoc.user.fragment.MainActivityFragment;
@@ -55,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mView = findViewById(android.R.id.content);
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestServerAuthCode("55733305212-ak8qek9fvkuaopqvhcf3qe9utme29np6.apps.googleusercontent.com")
@@ -75,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
         if(token == null){
             startActivity(new Intent(MainActivity.this, AuthActivity.class));
         } else {
+
+            Log.i("MAIN-ONSTART-TOKEN", token);
+
             String decodedJson = null;
             try {
                 decodedJson = JWTUtils.decoded(token);
@@ -112,13 +120,6 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
 
-    public static int convertPixelsToDp(float px, Context context){
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        int dp = (int) (px / (metrics.densityDpi / 160f));
-        return dp;
-    }
-
     private void buildDialog() {
 
         new MaterialDialog.Builder(this)
@@ -143,15 +144,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void newAppt(final String description) {
         String token = UserDataStore.getInstance().getToken(this);
+        Log.i("API-NEWAPPT-TOKEN", token);
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<AuthResponse> call = apiInterface.newAppointment(new AppointBody(token, description));
+        AppointBody appointBody = new AppointBody(token, description);
+        Call<AuthResponse> call = apiInterface.newAppointment(appointBody);
         call.enqueue(new Callback<AuthResponse>() {
             @Override
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                Log.i("API=NEWAPPT-RESPONSE", response.toString());
                 if(response.isSuccessful()) {
                     getNewToken();
                 } else {
-                    Snackbar.make(mView, "Unable to create", Snackbar.LENGTH_LONG)
+                    Snackbar.make(mView, "Unable to create !", Snackbar.LENGTH_LONG)
                             .setAction("retry", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -180,13 +184,14 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<AuthResponse>() {
             @Override
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                Log.i("API-NEWTOKEN-RESPONSE",  response.toString());
                 if(response.isSuccessful()) {
                     AuthResponse authResponse = response.body();
                     Toast.makeText(getApplicationContext(), "Created new appointment", Toast.LENGTH_SHORT).show();
                     UserDataStore.getInstance().saveToken(getApplicationContext(), authResponse.getToken());
                     replaceFragment();
                 } else {
-                    Snackbar.make(mView, "An error occurred", Snackbar.LENGTH_LONG)
+                    Snackbar.make(mView, "An error occurred !!", Snackbar.LENGTH_LONG)
                             .setAction("retry", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -221,43 +226,28 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_logout:
                 logoutUser();
+                 break;
+            case R.id.action_camera:
+                startActivity(new Intent(this, CameraActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     private void logoutUser() {
-        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<AuthResponse> call = apiInterface.logoutUser(new TokenString(UserDataStore.getInstance().getToken(getApplicationContext())));
-        call.enqueue(new Callback<AuthResponse>() {
-            @Override
-            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-                if(response.isSuccessful()){
-                    AuthResponse authResponse = response.body();
-                    Toast.makeText(getApplicationContext(), authResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    UserDataStore.getInstance().clearData(getApplicationContext());
-
-                    if (account != null) {
-                        mGoogleSignInClient.signOut()
-                                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        startActivity(new Intent(MainActivity.this, AuthActivity.class));
-                                    }
-                                });
-                    }
-
-                    startActivity(new Intent(getApplicationContext(), AuthActivity.class));
-                } else {
-                    Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AuthResponse> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (account != null) {
+            mGoogleSignInClient.signOut()
+                    .addOnCompleteListener(MainActivity.this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            UserDataStore.getInstance().clearData(getApplicationContext());
+                            startActivity(new Intent(getApplicationContext(), AuthActivity.class));
+                        }
+                    });
+        } else {
+            UserDataStore.getInstance().clearData(getApplicationContext());
+            startActivity(new Intent(getApplicationContext(), AuthActivity.class));
+        }
     }
 
     @Override

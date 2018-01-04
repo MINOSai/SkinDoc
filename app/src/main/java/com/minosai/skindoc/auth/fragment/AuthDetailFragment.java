@@ -10,7 +10,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.minosai.skindoc.R;
 import com.minosai.skindoc.api.ApiClient;
 import com.minosai.skindoc.api.ApiInterface;
-import com.minosai.skindoc.auth.AuthActivity;
 import com.minosai.skindoc.auth.data.AuthResponse;
-import com.minosai.skindoc.auth.data.TokenString;
 import com.minosai.skindoc.user.MainActivity;
 import com.minosai.skindoc.user.utils.UserDataStore;
 
@@ -124,7 +121,7 @@ public class AuthDetailFragment extends Fragment{
     private void getDetails() {
         UserDataStore.getInstance().signupCredentials.setUser(txtUsername.getEditText().getText().toString());
         if (doctorCheckBox.isChecked()) {
-            UserDataStore.getInstance().signupCredentials.setQualification(txtQualification.getEditText().getText().toString());
+            UserDataStore.getInstance().signupCredentials.setQualifications(txtQualification.getEditText().getText().toString());
             UserDataStore.getInstance().signupCredentials.setDescription(txtDescription.getEditText().getText().toString());
             UserDataStore.getInstance().signupCredentials.setPortal("0");
         } else {
