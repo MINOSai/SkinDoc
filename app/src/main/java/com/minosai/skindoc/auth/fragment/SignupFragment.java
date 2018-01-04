@@ -99,12 +99,6 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
 
         switch (view.getId()) {
-//            case R.id.btn_signup_doctor :
-//                userDoctor();
-//                break;
-//            case R.id.btn_signup_patient :
-//                userPatient();
-//                break;
             case R.id.txt_signup_login :
                 FragmentTransaction loginft =  getFragmentManager().beginTransaction();
                 loginft.replace(R.id.frame_auth, new LoginFragment());
@@ -119,102 +113,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                 continueft.replace(R.id.frame_auth, new AuthDetailFragment());
                 continueft.commit();
                 break;
-//            case R.id.fab_signup :
-//                signupCredentials.setName(textUserName.getText().toString());
-//                signupCredentials.setEmail(textEmail.getText().toString());
-//                signupCredentials.setPass(textPassword.getText().toString());
-//                if(signupCredentials.getPortal() == null){
-//                    Toast.makeText(listener, "Please choose a role.", Toast.LENGTH_SHORT).show();
-//                    break;
-//                } else if(signupCredentials.getPortal().matches("0")){
-//                    signupCredentials.setDescription(textDescription.getText().toString());
-//                    signupCredentials.setQualification(textQualify.getText().toString());
-//                }
-//                signup();
-//                break;
-//            case R.id.btn_signup_google:
-//                googleAuth();
-//                break;
         }
 
     }
 
-//    private void googleAuth() {
-//        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-//        startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN);
-//    }
-//
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode == RC_GOOGLE_SIGN_IN && resultCode == Activity.RESULT_OK) {
-//            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-//            try {
-//                GoogleSignInAccount account = task.getResult(ApiException.class);
-//                Log.i("Google user signup ", account.getId());
-//                Log.i("Google user signup", account.getIdToken());
-//                startActivity(new Intent(getContext(), MainActivity.class));
-//            } catch (ApiException e) {
-//                Log.i("Google user signup", "FAILED");
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
-//    private void userPatient() {
-//        btnDoctor.setTextColor(getResources().getColor(R.color.mBlack));
-//        btnPatient.setTextColor(getResources().getColor(R.color.colorAccent));
-//        doctorLayout.setVisibility(View.GONE);
-//
-//        signupCredentials.setPortal("1");
-//    }
-//
-//
-//    private void userDoctor() {
-//        btnDoctor.setTextColor(getResources().getColor(R.color.colorAccent));
-//        btnPatient.setTextColor(getResources().getColor(R.color.mBlack));
-//        doctorLayout.setVisibility(View.VISIBLE);
-//
-//        signupCredentials.setPortal("0");
-//    }
-
-//    private void signup() {
-//        signupProgress.show();
-//
-//        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-//        Call<AuthResponse> call = apiInterface.signupUser(signupCredentials);
-//        call.enqueue(new Callback<AuthResponse>() {
-//            @Override
-//            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-//                if(response.isSuccessful()){
-//                    AuthResponse authResponse = response.body();
-//                    Toast.makeText(getContext(), authResponse.getMessage(), Toast.LENGTH_SHORT).show();
-//                    UserDataStore.getInstance().saveToken(getContext(), authResponse.getToken());
-//                    signupProgress.dismiss();
-//                    startActivity(new Intent(getContext(), MainActivity.class));
-//                } else {
-//                    Snackbar.make(getView(), "An error occurred", Snackbar.LENGTH_LONG)
-//                            .setAction("retry", new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View view) {
-//                                    signup();
-//                                }
-//                            }).show();
-//                    signupProgress.dismiss();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<AuthResponse> call, Throwable t) {
-//                Snackbar.make(getView(), "An error occurred", Snackbar.LENGTH_LONG)
-//                        .setAction("retry", new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                signup();
-//                            }
-//                        }).show();
-//                signupProgress.dismiss();
-//            }
-//        });
-//    }
 }

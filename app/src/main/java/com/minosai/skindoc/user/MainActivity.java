@@ -1,15 +1,19 @@
 package com.minosai.skindoc.user;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -25,6 +29,7 @@ import com.minosai.skindoc.auth.AuthActivity;
 import com.minosai.skindoc.auth.data.AuthResponse;
 import com.minosai.skindoc.auth.data.TokenString;
 import com.minosai.skindoc.camera.CameraActivity;
+import com.minosai.skindoc.chat.ChatActivity;
 import com.minosai.skindoc.user.data.User;
 import com.minosai.skindoc.user.fragment.MainActivityFragment;
 import com.minosai.skindoc.user.utils.JWTUtils;
@@ -91,9 +96,41 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                startActivity(new Intent(MainActivity.this, CameraActivity.class));
+//                startActivity(new Intent(MainActivity.this, CameraActivity.class));
+//                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+//                intent.putExtra(ChatActivity.USER_NODE, "minosaipatient-minosaidoctor");
+//                startActivity(intent);
+                buildDialog();
             }
         });
+    }
+
+    private void buildDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Information");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint("A short information");
+        builder.setView(input);
+
+        builder.setPositiveButton("CONTINUE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                newAppt(input.getText().toString());
+            }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void newAppt(String s) {
     }
 
     @Override
@@ -106,8 +143,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_settings:
-                break;
             case R.id.action_logout:
                 logoutUser();
         }

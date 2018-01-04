@@ -6,16 +6,26 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.minosai.skindoc.R;
+import com.minosai.skindoc.api.ApiClient;
+import com.minosai.skindoc.api.ApiInterface;
+import com.minosai.skindoc.auth.data.AuthResponse;
 import com.minosai.skindoc.chat.ChatActivity;
 import com.minosai.skindoc.user.data.ApDetail;
+import com.minosai.skindoc.user.data.api.ResolveBody;
 import com.minosai.skindoc.user.utils.UserDataStore;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by minos.ai on 30/12/17.
@@ -40,7 +50,10 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
     @Override
     public void onBindViewHolder(PatientAdapter.ViewHolder holder, final int position) {
         final ApDetail currentApDetail = apDetails.get(position);
-        holder.txtDocName.setText(currentApDetail.getDoctor());
+
+        holder.txtDocName.setText(currentApDetail.getDoctorName());
+        holder.txtDocQual.setText(currentApDetail.getQualification());
+        holder.txtDocDesc.setText(currentApDetail.getDescription());
 
         holder.chatImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +66,38 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
                 context.startActivity(intent);
             }
         });
+
+        holder.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelAppointment(position);
+            }
+        });
+    }
+
+    private void cancelAppointment(final int position) {
+        String user = UserDataStore.getInstance().getUser(context).getUser();
+        String doctor = apDetails.get(position).getDoctor();
+
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<AuthResponse> call = apiInterface.resolveAppointment(new ResolveBody(user, doctor));
+        call.enqueue(new Callback<AuthResponse>() {
+            @Override
+            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                if(response.isSuccessful()) {
+                    apDetails.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, apDetails.size());
+                } else {
+                    Toast.makeText(context, "An error occurred", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthResponse> call, Throwable t) {
+                Toast.makeText(context, "Error occurred", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -62,16 +107,18 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtDate, txtDocName;
+        TextView txtDocName, txtDocQual, txtDocDesc;
         ImageView chatImgBtn;
+        Button btnCancel;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            txtDate = (TextView) itemView.findViewById(R.id.txt_patient_date);
-            txtDocName = (TextView) itemView.findViewById(R.id.txt_patient_doctor_name);
-
-            chatImgBtn = (ImageView) itemView.findViewById(R.id.img_btn_patient_chat);
+            txtDocName = (TextView) itemView.findViewById(R.id.txt_patient_dr_name);
+            txtDocQual = (TextView) itemView.findViewById(R.id.txt_patient_doc_qual);
+            txtDocDesc = (TextView) itemView.findViewById(R.id.txt_patient_doc_desc);
+            chatImgBtn = (ImageView) itemView.findViewById(R.id.btn_patient_chat);
+            btnCancel = (Button) itemView.findViewById(R.id.btn_patient_cancel);
         }
     }
 }

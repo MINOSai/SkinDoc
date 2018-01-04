@@ -3,6 +3,7 @@ package com.minosai.skindoc.camera.fragment;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -14,6 +15,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -28,9 +31,19 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.minosai.skindoc.R;
+import com.minosai.skindoc.api.ApiClient;
+import com.minosai.skindoc.api.ApiInterface;
+import com.minosai.skindoc.auth.data.AuthResponse;
+import com.minosai.skindoc.auth.data.TokenString;
+import com.minosai.skindoc.user.MainActivity;
+import com.minosai.skindoc.user.utils.UserDataStore;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by minos.ai on 01/01/18.
@@ -56,6 +69,8 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
     boolean mIsCameraConfigured = false;
     private Surface mCameraSurface = null;
 
+    FloatingActionButton fab;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -75,10 +90,8 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
 
             } else {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
-                Toast.makeText(getContext(), "request permission", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(getContext(), "PERMISSION_ALREADY_GRANTED", Toast.LENGTH_SHORT).show();
             try {
                 mCameraManager.openCamera(mCameraIDsList[0], mCameraStateCB, new Handler());
             } catch (CameraAccessException e) {
@@ -100,6 +113,14 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
         this.mSurfaceHolder = this.mSurfaceView.getHolder();
         this.mSurfaceHolder.addCallback(this);
         this.mCameraManager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
+
+        fab = (FloatingActionButton) view.findViewById(R.id.takepicture);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newAppointment();
+            }
+        });
 
         try {
             mCameraIDsList = this.mCameraManager.getCameraIdList();
@@ -126,6 +147,52 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
             }
         };
 
+    }
+
+    private void newAppointment() {
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<AuthResponse> call = apiInterface.newAppointment(new TokenString(UserDataStore.getInstance().getToken(getContext())));
+        call.enqueue(new Callback<AuthResponse>() {
+            @Override
+            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                Log.i("response-error-code", String.valueOf(response.code()));
+                if(response.isSuccessful()) {
+                    getNewToken();
+                } else {
+                    Snackbar.make(getView(), "An error occurred", Snackbar.LENGTH_LONG).show();
+                    Log.i("response-error-code", String.valueOf(response.code()));
+                    Log.i("response-error-msg", response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "Error occurred", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getNewToken() {
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<AuthResponse> call = apiInterface.newToken(new TokenString(UserDataStore.getInstance().getToken(getContext())));
+        call.enqueue(new Callback<AuthResponse>() {
+            @Override
+            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                if(response.isSuccessful()) {
+                    AuthResponse authResponse = response.body();
+                    Toast.makeText(getContext(), "Created new appointment", Toast.LENGTH_SHORT).show();
+                    UserDataStore.getInstance().saveToken(getContext(), authResponse.getToken());
+                    startActivity(new Intent(getContext(), MainActivity.class));
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

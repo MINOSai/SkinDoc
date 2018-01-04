@@ -22,48 +22,35 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/txt_doctor_disease_name"
+                android:id="@+id/txt_doctor_patient_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Disease name"
+                android:text="Patient name"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txt_doctor_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:drawableLeft="@drawable/calendar"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:text="12 Jan, 2018"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_doctor_disease_name" />
-
-            <TextView
                 android:id="@+id/txt_doctor_info"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:text="This is a short info. This describes what the patient want to convey to doctor."
                 app:layout_constraintBottom_toTopOf="@+id/view"
                 app:layout_constraintEnd_toStartOf="@+id/img_doctor_img_patient"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_doctor_date" />
+                app:layout_constraintTop_toBottomOf="@+id/txt_doctor_patient_name" />
 
             <ImageView
                 android:id="@+id/img_doctor_img_patient"
                 android:layout_width="100dp"
-                android:layout_height="125dp"
+                android:layout_height="0dp"
                 app:layout_constraintBottom_toTopOf="@+id/view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -75,60 +62,33 @@
                 android:layout_height="0.5dp"
                 android:layout_marginBottom="8dp"
                 android:background="@android:color/darker_gray"
-                app:layout_constraintBottom_toTopOf="@+id/img_doctor_patient_avatar"
+                app:layout_constraintBottom_toTopOf="@+id/btn_doctor_done"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/img_doctor_patient_avatar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/profile"
-                app:civ_border_color="@android:color/darker_gray"
-                app:civ_border_width="0.5dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/profile" />
-
-            <TextView
-                android:id="@+id/txt_doctor_patient_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:text="Mr. Amrut Mango"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/img_doctor_patient_avatar"
-                app:layout_constraintTop_toBottomOf="@+id/view" />
 
             <ImageView
                 android:id="@+id/img_btn_doctor_chat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
-                android:padding="16dp"
+                android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:padding="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_doctor_done"
-                app:layout_constraintTop_toBottomOf="@+id/view"
                 app:srcCompat="@drawable/message" />
 
             <Button
                 android:id="@+id/btn_doctor_done"
-                style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
                 android:text="DONE"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

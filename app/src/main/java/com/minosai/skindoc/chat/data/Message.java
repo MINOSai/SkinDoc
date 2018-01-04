@@ -10,6 +10,9 @@ public class Message {
     private String sender;
     private String id;
 
+    public Message() {
+    }
+
     public Message(String message, String sender, String id) {
         this.message = message;
         this.sender = sender;

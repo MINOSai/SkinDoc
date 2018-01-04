@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.minosai.skindoc.R;
 import com.minosai.skindoc.chat.adapter.ChatAdapter;
 import com.minosai.skindoc.chat.data.Message;
+import com.minosai.skindoc.user.utils.UserDataStore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,8 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        chatNode = getIntent().getStringExtra(USER_NODE);
+
         getSupportActionBar().setTitle(chatNode.split("-")[1]);
 
         initFirebase();
@@ -61,8 +64,11 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(!chatTextView.getText().toString().isEmpty()){
                     String key = databaseReference.push().getKey();
-                    Message message = new Message(chatTextView.getText().toString(), chatNode.split("-")[0], key);
+                    String sender = UserDataStore.getInstance().getUser(getApplicationContext()).getUser();
+                    String msg = chatTextView.getText().toString();
+                    Message message = new Message(msg, sender, key);
                     databaseReference.child(key).setValue(message);
+                    chatTextView.setText("");
                 }
             }
         });
@@ -81,7 +87,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private void initFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
-        chatNode = getIntent().getStringExtra(USER_NODE);
         databaseReference = firebaseDatabase.getReference().child("chat").child(chatNode);
     }
 
@@ -111,8 +116,8 @@ public class ChatActivity extends AppCompatActivity {
             childEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    Message message = dataSnapshot.getValue(Message.class);
-                    messages.add(message);
+//                    Message message = dataSnapshot.getValue(Message.class);
+                    messages.add(dataSnapshot.getValue(Message.class));
                     chatAdapter.notifyDataSetChanged();
                 }
 
@@ -122,6 +127,8 @@ public class ChatActivity extends AppCompatActivity {
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    messages.remove(dataSnapshot.getValue(Message.class));
+                    chatAdapter.notifyDataSetChanged();
                 }
 
                 @Override

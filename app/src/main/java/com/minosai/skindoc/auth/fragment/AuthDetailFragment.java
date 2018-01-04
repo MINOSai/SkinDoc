@@ -80,12 +80,15 @@ public class AuthDetailFragment extends Fragment{
             UserDataStore.getInstance().signupCredentials.setGoogle("True");
             UserDataStore.getInstance().signupCredentials.setPass(null);
         } else {
-
+            UserDataStore.getInstance().signupCredentials.setGoogle(null);
         }
 
-        UserDataStore.getInstance().signupCredentials.setPortal("1");
-
         initViews(view);
+
+        UserDataStore.getInstance().signupCredentials.setPortal("1");
+        doctorCheckBox.setChecked(false);
+        doctorLayout.setVisibility(View.GONE);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,12 +100,12 @@ public class AuthDetailFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 if(doctorCheckBox.isChecked()) {
-                    doctorCheckBox.setChecked(false);
-                    doctorLayout.setVisibility(View.GONE);
-                    UserDataStore.getInstance().signupCredentials.setPortal("0");
-                } else {
                     doctorCheckBox.setChecked(true);
                     doctorLayout.setVisibility(View.VISIBLE);
+                    UserDataStore.getInstance().signupCredentials.setPortal("0");
+                } else {
+                    doctorCheckBox.setChecked(false);
+                    doctorLayout.setVisibility(View.GONE);
                     UserDataStore.getInstance().signupCredentials.setPortal("1");
                 }
             }
@@ -123,6 +126,9 @@ public class AuthDetailFragment extends Fragment{
         if (doctorCheckBox.isChecked()) {
             UserDataStore.getInstance().signupCredentials.setQualification(txtQualification.getEditText().getText().toString());
             UserDataStore.getInstance().signupCredentials.setDescription(txtDescription.getEditText().getText().toString());
+            UserDataStore.getInstance().signupCredentials.setPortal("0");
+        } else {
+            UserDataStore.getInstance().signupCredentials.setPortal("1");
         }
         signupUser();
     }
@@ -130,6 +136,7 @@ public class AuthDetailFragment extends Fragment{
     //TODO: show progressbars
     private void signupUser() {
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Log.i("signupdetail", UserDataStore.getInstance().signupCredentials.getEmail());
         Call<AuthResponse> call = apiInterface.signupUser(UserDataStore.getInstance().signupCredentials);
         call.enqueue(new Callback<AuthResponse>() {
             @Override
@@ -151,7 +158,7 @@ public class AuthDetailFragment extends Fragment{
 
             @Override
             public void onFailure(Call<AuthResponse> call, Throwable t) {
-                Snackbar.make(getView(), "An error occurred", Snackbar.LENGTH_LONG)
+                Snackbar.make(getView(), "Error occurred", Snackbar.LENGTH_LONG)
                         .setAction("retry", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {

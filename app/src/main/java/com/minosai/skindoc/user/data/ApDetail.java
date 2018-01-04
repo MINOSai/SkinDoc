@@ -8,37 +8,18 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class ApDetail {
-    @SerializedName("symptoms")
-    @Expose
-    private String symptoms;
-    @SerializedName("situation")
-    @Expose
-    private String situation;
     @SerializedName("doctor")
     @Expose
     private String doctor;
-    @SerializedName("status")
+    @SerializedName("doctor_name")
     @Expose
-    private Boolean status;
-    @SerializedName("response")
+    private String doctorName;
+    @SerializedName("qualification")
     @Expose
-    private String response;
-
-    public String getSymptoms() {
-        return symptoms;
-    }
-
-    public void setSymptoms(String symptoms) {
-        this.symptoms = symptoms;
-    }
-
-    public String getSituation() {
-        return situation;
-    }
-
-    public void setSituation(String situation) {
-        this.situation = situation;
-    }
+    private String qualification;
+    @SerializedName("description")
+    @Expose
+    private String description;
 
     public String getDoctor() {
         return doctor;
@@ -48,19 +29,27 @@ public class ApDetail {
         this.doctor = doctor;
     }
 
-    public Boolean getStatus() {
-        return status;
+    public String getDoctorName() {
+        return doctorName;
     }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
     }
 
-    public String getResponse() {
-        return response;
+    public String getQualification() {
+        return qualification;
     }
 
-    public void setResponse(String response) {
-        this.response = response;
+    public void setQualification(String qualification) {
+        this.qualification = qualification;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
