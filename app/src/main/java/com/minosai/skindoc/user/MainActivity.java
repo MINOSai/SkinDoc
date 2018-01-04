@@ -1,21 +1,22 @@
 package com.minosai.skindoc.user;
 
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -28,9 +29,8 @@ import com.minosai.skindoc.api.ApiInterface;
 import com.minosai.skindoc.auth.AuthActivity;
 import com.minosai.skindoc.auth.data.AuthResponse;
 import com.minosai.skindoc.auth.data.TokenString;
-import com.minosai.skindoc.camera.CameraActivity;
-import com.minosai.skindoc.chat.ChatActivity;
 import com.minosai.skindoc.user.data.User;
+import com.minosai.skindoc.user.data.api.AppointBody;
 import com.minosai.skindoc.user.fragment.MainActivityFragment;
 import com.minosai.skindoc.user.utils.JWTUtils;
 import com.minosai.skindoc.user.utils.UserDataStore;
@@ -42,6 +42,8 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private User user;
+
+    View mView;
 
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInAccount account;
@@ -85,15 +87,14 @@ public class MainActivity extends AppCompatActivity {
                 user = UserDataStore.getInstance().getUser(this);
             }
 
-            android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.frame_user, new MainActivityFragment());
-            ft.commit();
+            replaceFragment();
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mView = view;
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
 //                startActivity(new Intent(MainActivity.this, CameraActivity.class));
@@ -105,32 +106,107 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void buildDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Information");
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        input.setHint("A short information");
-        builder.setView(input);
-
-        builder.setPositiveButton("CONTINUE", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                newAppt(input.getText().toString());
-            }
-        });
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-
-        builder.show();
+    private void replaceFragment() {
+        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frame_user, new MainActivityFragment());
+        ft.commit();
     }
 
-    private void newAppt(String s) {
+    public static int convertPixelsToDp(float px, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        int dp = (int) (px / (metrics.densityDpi / 160f));
+        return dp;
+    }
+
+    private void buildDialog() {
+
+        new MaterialDialog.Builder(this)
+                .title("Appointment")
+                .content("Give a quick information")
+                .inputType(
+                        InputType.TYPE_CLASS_TEXT)
+                .positiveText("CONTINUE")
+                .input(
+                        "Information",
+                        "",
+                        false,
+                        new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                newAppt(input.toString());
+                            }
+                        })
+                .show();
+
+    }
+
+    private void newAppt(final String description) {
+        String token = UserDataStore.getInstance().getToken(this);
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<AuthResponse> call = apiInterface.newAppointment(new AppointBody(token, description));
+        call.enqueue(new Callback<AuthResponse>() {
+            @Override
+            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                if(response.isSuccessful()) {
+                    getNewToken();
+                } else {
+                    Snackbar.make(mView, "Unable to create", Snackbar.LENGTH_LONG)
+                            .setAction("retry", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    newAppt(description);
+                                }
+                            }).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthResponse> call, Throwable t) {
+                Snackbar.make(mView, "Unable to create", Snackbar.LENGTH_LONG)
+                        .setAction("retry", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                newAppt(description);
+                            }
+                        }).show();
+            }
+        });
+    }
+
+    private void getNewToken() {
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<AuthResponse> call = apiInterface.newToken(new TokenString(UserDataStore.getInstance().getToken(getApplicationContext())));
+        call.enqueue(new Callback<AuthResponse>() {
+            @Override
+            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                if(response.isSuccessful()) {
+                    AuthResponse authResponse = response.body();
+                    Toast.makeText(getApplicationContext(), "Created new appointment", Toast.LENGTH_SHORT).show();
+                    UserDataStore.getInstance().saveToken(getApplicationContext(), authResponse.getToken());
+                    replaceFragment();
+                } else {
+                    Snackbar.make(mView, "An error occurred", Snackbar.LENGTH_LONG)
+                            .setAction("retry", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    getNewToken();
+                                }
+                            }).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthResponse> call, Throwable t) {
+                Snackbar.make(mView, "An error occurred", Snackbar.LENGTH_LONG)
+                        .setAction("retry", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                getNewToken();
+                            }
+                        }).show();
+            }
+        });
     }
 
     @Override
@@ -182,16 +258,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
             }
         });
-
-//        if (account != null) {
-//            mGoogleSignInClient.signOut()
-//                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<Void> task) {
-//                            startActivity(new Intent(MainActivity.this, AuthActivity.class));
-//                        }
-//                    });
-//        }
     }
 
     @Override

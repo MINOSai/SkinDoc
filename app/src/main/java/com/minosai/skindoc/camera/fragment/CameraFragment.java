@@ -150,26 +150,26 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
     }
 
     private void newAppointment() {
-        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<AuthResponse> call = apiInterface.newAppointment(new TokenString(UserDataStore.getInstance().getToken(getContext())));
-        call.enqueue(new Callback<AuthResponse>() {
-            @Override
-            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-                Log.i("response-error-code", String.valueOf(response.code()));
-                if(response.isSuccessful()) {
-                    getNewToken();
-                } else {
-                    Snackbar.make(getView(), "An error occurred", Snackbar.LENGTH_LONG).show();
-                    Log.i("response-error-code", String.valueOf(response.code()));
-                    Log.i("response-error-msg", response.body().getMessage());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AuthResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "Error occurred", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+//        Call<AuthResponse> call = apiInterface.newAppointment(new TokenString(UserDataStore.getInstance().getToken(getContext())));
+//        call.enqueue(new Callback<AuthResponse>() {
+//            @Override
+//            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+//                Log.i("response-error-code", String.valueOf(response.code()));
+//                if(response.isSuccessful()) {
+//                    getNewToken();
+//                } else {
+//                    Snackbar.make(getView(), "An error occurred", Snackbar.LENGTH_LONG).show();
+//                    Log.i("response-error-code", String.valueOf(response.code()));
+//                    Log.i("response-error-msg", response.body().getMessage());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<AuthResponse> call, Throwable t) {
+//                Toast.makeText(getContext(), "Error occurred", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     private void getNewToken() {

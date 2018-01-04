@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "55733305212",
+    "firebase_url": "https://skindoc-eb5dc.firebaseio.com",
+    "project_id": "skindoc-eb5dc",
+    "storage_bucket": "skindoc-eb5dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:55733305212:android:46bf66950302817f",
+        "android_client_info": {
+          "package_name": "com.minosai.skindoc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "55733305212-5k1edphsvdjrm5bprj3p4anassc1sjnc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.minosai.skindoc",
+            "certificate_hash": "15f1b15ff32abfbde058df2505a3e0f278205a6e"
+          }
+        },
+        {
+          "client_id": "55733305212-ak8qek9fvkuaopqvhcf3qe9utme29np6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdbdabP9JlKO3Na7BNdF_vNRxZWcFMqoE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "55733305212-ak8qek9fvkuaopqvhcf3qe9utme29np6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

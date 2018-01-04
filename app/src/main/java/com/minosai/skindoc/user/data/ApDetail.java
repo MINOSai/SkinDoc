@@ -8,13 +8,13 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class ApDetail {
-    @SerializedName("doctor")
+    @SerializedName("user")
     @Expose
     private String doctor;
-    @SerializedName("doctor_name")
+    @SerializedName("name")
     @Expose
     private String doctorName;
-    @SerializedName("qualification")
+    @SerializedName("qualifications")
     @Expose
     private String qualification;
     @SerializedName("description")

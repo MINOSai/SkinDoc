@@ -39,6 +39,8 @@ dependencies {
 
     compile 'com.google.firebase:firebase-database:11.6.0'
 
+    implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

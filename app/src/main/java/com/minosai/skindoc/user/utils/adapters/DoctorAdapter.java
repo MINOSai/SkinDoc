@@ -17,6 +17,7 @@ import com.minosai.skindoc.api.ApiInterface;
 import com.minosai.skindoc.auth.data.AuthResponse;
 import com.minosai.skindoc.chat.ChatActivity;
 import com.minosai.skindoc.user.data.ApDetail;
+import com.minosai.skindoc.user.data.Plist;
 import com.minosai.skindoc.user.data.api.ResolveBody;
 import com.minosai.skindoc.user.utils.UserDataStore;
 
@@ -32,11 +33,10 @@ import retrofit2.Response;
 
 public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder> {
 
-    //TODO: change plist
-    private List<String> pList;
+    private List<Plist> pList;
     Context context;
 
-    public DoctorAdapter(List<String> pList, Context context) {
+    public DoctorAdapter(List<Plist> pList, Context context) {
         this.pList = pList;
         this.context = context;
     }
@@ -49,14 +49,15 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        String currentPDetail = pList.get(position);
-        holder.txtPatientName.setText(currentPDetail);
+        Plist currentPDetail = pList.get(position);
+        holder.txtPatientName.setText(currentPDetail.getUserName());
+        holder.txtDescription.setText(currentPDetail.getDescription());
 
         holder.chatImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String right = UserDataStore.getInstance().getUser(context).getUser();
-                String left = pList.get(position);
+                String left = pList.get(position).getUser();
 
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra(ChatActivity.USER_NODE, left+"-"+right);
@@ -74,7 +75,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder
 
     private void apptDone(final int position) {
         String doctor = UserDataStore.getInstance().getUser(context).getUser();
-        String user = pList.get(position);
+        String user = pList.get(position).getUser();
 
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         Call<AuthResponse> call = apiInterface.resolveAppointment(new ResolveBody(user, doctor));

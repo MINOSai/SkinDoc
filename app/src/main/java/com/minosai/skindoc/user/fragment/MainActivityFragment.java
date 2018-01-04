@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.minosai.skindoc.R;
 import com.minosai.skindoc.user.data.ApDetail;
+import com.minosai.skindoc.user.data.Plist;
 import com.minosai.skindoc.user.utils.UserDataStore;
 import com.minosai.skindoc.user.utils.adapters.DoctorAdapter;
 import com.minosai.skindoc.user.utils.adapters.PatientAdapter;
@@ -30,8 +31,6 @@ import java.util.List;
 public class MainActivityFragment extends Fragment {
 
     private FragmentActivity listener;
-
-    List<ApDetail> apDetails = new ArrayList<>();
 
     RecyclerView recyclerView;
     DoctorAdapter doctorAdapter;
@@ -57,23 +56,23 @@ public class MainActivityFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if(apDetails.isEmpty()) {
-                    txtEmpty.setVisibility(View.VISIBLE);
-                } else {
-                    txtEmpty.setVisibility(View.GONE);
-                    if(UserDataStore.getInstance().getUser(getContext()).getPortal() == 0) {
-                        doctorAdapter = new DoctorAdapter(UserDataStore.getInstance().getUser(getContext()).getPlist(), getActivity());
-                        recyclerView.setAdapter(doctorAdapter);
-                    } else {
-                        patientAdapter = new PatientAdapter(UserDataStore.getInstance().getUser(getContext()).getApDetails(), getContext());
-                        recyclerView.setAdapter(patientAdapter);
-                    }
-                }
+        if(UserDataStore.getInstance().getUser(getContext()).getPortal() == 0) {
+            List<Plist> plist = UserDataStore.getInstance().getUser(getContext()).getPlist();
+            if(plist.isEmpty()) {
+                txtEmpty.setVisibility(View.VISIBLE);
+            } else {
+                doctorAdapter = new DoctorAdapter(plist, getActivity());
+                recyclerView.setAdapter(doctorAdapter);
             }
-        }).start();
+        } else {
+            List<ApDetail> apDetails = UserDataStore.getInstance().getUser(getActivity()).getApDetails();
+            if(apDetails.isEmpty()) {
+                txtEmpty.setVisibility(View.VISIBLE);
+            } else {
+                patientAdapter = new PatientAdapter(apDetails, getActivity());
+                recyclerView.setAdapter(patientAdapter);
+            }
+        }
 
         return view;
     }

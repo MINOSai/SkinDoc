@@ -27,7 +27,7 @@ public class User {
     private int portal;
     @SerializedName("plist")
     @Expose
-    private List<String> plist = null;
+    private List<Plist> plist = null;
     @SerializedName("ap_details")
     @Expose
     private List<ApDetail> apDetails = null;
@@ -73,11 +73,11 @@ public class User {
         this.portal = portal;
     }
 
-    public List<String> getPlist() {
+    public List<Plist> getPlist() {
         return plist;
     }
 
-    public void setPlist(List<String> plist) {
+    public void setPlist(List<Plist> plist) {
         this.plist = plist;
     }
 
