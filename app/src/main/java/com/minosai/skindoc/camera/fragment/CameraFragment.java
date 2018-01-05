@@ -84,20 +84,20 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
         super.onStart();
 
         //requesting permission
-        int permissionCheck = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
-
-            } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
-            }
-        } else {
-            try {
-                mCameraManager.openCamera(mCameraIDsList[0], mCameraStateCB, new Handler());
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
-            }
-        }
+//        int permissionCheck = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA);
+//        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
+//
+//            } else {
+//                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
+//            }
+//        } else {
+//            try {
+//                mCameraManager.openCamera(mCameraIDsList[0], mCameraStateCB, new Handler());
+//            } catch (CameraAccessException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     @Nullable
@@ -109,67 +109,44 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        this.mSurfaceView = (SurfaceView) view.findViewById(R.id.camerapreview);
-        this.mSurfaceHolder = this.mSurfaceView.getHolder();
-        this.mSurfaceHolder.addCallback(this);
-        this.mCameraManager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
-
-        fab = (FloatingActionButton) view.findViewById(R.id.takepicture);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                newAppointment();
-            }
-        });
-
-        try {
-            mCameraIDsList = this.mCameraManager.getCameraIdList();
-            for (String id : mCameraIDsList) {
-                Log.v(TAG, "CameraID: " + id);
-            }
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
-
-        mCameraStateCB = new CameraDevice.StateCallback() {
-            @Override
-            public void onOpened(CameraDevice camera) {
-                mCameraDevice = camera;
-                mHandler.sendEmptyMessage(MSG_CAMERA_OPENED);
-            }
-
-            @Override
-            public void onDisconnected(CameraDevice camera) {
-            }
-
-            @Override
-            public void onError(CameraDevice camera, int error) {
-            }
-        };
-
-    }
-
-    private void newAppointment() {
-//        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-//        Call<AuthResponse> call = apiInterface.newAppointment(new TokenString(UserDataStore.getInstance().getToken(getContext())));
-//        call.enqueue(new Callback<AuthResponse>() {
+//        this.mSurfaceView = (SurfaceView) view.findViewById(R.id.camerapreview);
+//        this.mSurfaceHolder = this.mSurfaceView.getHolder();
+//        this.mSurfaceHolder.addCallback(this);
+//        this.mCameraManager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
+//
+//        fab = (FloatingActionButton) view.findViewById(R.id.takepicture);
+//        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-//                Log.i("response-error-code", String.valueOf(response.code()));
-//                if(response.isSuccessful()) {
-//                    getNewToken();
-//                } else {
-//                    Snackbar.make(getView(), "An error occurred", Snackbar.LENGTH_LONG).show();
-//                    Log.i("response-error-code", String.valueOf(response.code()));
-//                    Log.i("response-error-msg", response.body().getMessage());
-//                }
+//            public void onClick(View view) {
+//                newAppointment();
+//            }
+//        });
+//
+//        try {
+//            mCameraIDsList = this.mCameraManager.getCameraIdList();
+//            for (String id : mCameraIDsList) {
+//                Log.v(TAG, "CameraID: " + id);
+//            }
+//        } catch (CameraAccessException e) {
+//            e.printStackTrace();
+//        }
+//
+//        mCameraStateCB = new CameraDevice.StateCallback() {
+//            @Override
+//            public void onOpened(CameraDevice camera) {
+//                mCameraDevice = camera;
+//                mHandler.sendEmptyMessage(MSG_CAMERA_OPENED);
 //            }
 //
 //            @Override
-//            public void onFailure(Call<AuthResponse> call, Throwable t) {
-//                Toast.makeText(getContext(), "Error occurred", Toast.LENGTH_SHORT).show();
+//            public void onDisconnected(CameraDevice camera) {
 //            }
-//        });
+//
+//            @Override
+//            public void onError(CameraDevice camera, int error) {
+//            }
+//        };
+
     }
 
     private void getNewToken() {
@@ -198,27 +175,27 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        try {
-            if (mCaptureSession != null) {
-                mCaptureSession.stopRepeating();
-                mCaptureSession.close();
-                mCaptureSession = null;
-            }
-
-            mIsCameraConfigured = false;
-        } catch (final CameraAccessException e) {
-            // Doesn't matter, cloising device anyway
-            e.printStackTrace();
-        } catch (final IllegalStateException e2) {
-            // Doesn't matter, cloising device anyway
-            e2.printStackTrace();
-        } finally {
-            if (mCameraDevice != null) {
-                mCameraDevice.close();
-                mCameraDevice = null;
-                mCaptureSession = null;
-            }
-        }
+//        try {
+//            if (mCaptureSession != null) {
+//                mCaptureSession.stopRepeating();
+//                mCaptureSession.close();
+//                mCaptureSession = null;
+//            }
+//
+//            mIsCameraConfigured = false;
+//        } catch (final CameraAccessException e) {
+//            // Doesn't matter, cloising device anyway
+//            e.printStackTrace();
+//        } catch (final IllegalStateException e2) {
+//            // Doesn't matter, cloising device anyway
+//            e2.printStackTrace();
+//        } finally {
+//            if (mCameraDevice != null) {
+//                mCameraDevice.close();
+//                mCameraDevice = null;
+//                mCaptureSession = null;
+//            }
+//        }
     }
 
     @Override
@@ -258,17 +235,17 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_CAMERA:
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
-                    try {
-                        mCameraManager.openCamera(mCameraIDsList[0], mCameraStateCB, new Handler());
-                    } catch (CameraAccessException e) {
-                        e.printStackTrace();
-                    }
-                break;
-        }
+//
+//        switch (requestCode) {
+//            case MY_PERMISSIONS_REQUEST_CAMERA:
+//                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+//                    try {
+//                        mCameraManager.openCamera(mCameraIDsList[0], mCameraStateCB, new Handler());
+//                    } catch (CameraAccessException e) {
+//                        e.printStackTrace();
+//                    }
+//                break;
+//        }
     }
 
     @Override

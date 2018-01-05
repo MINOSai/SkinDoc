@@ -12,6 +12,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -25,13 +27,15 @@
 
             <TextView
                 android:id="@+id/txt_patient_dr_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Dr. John Doe"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@+id/txt_patient_timestamp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -75,6 +79,7 @@
                 android:id="@+id/img_patient_skin"
                 android:layout_width="100dp"
                 android:layout_height="0dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/view_card_divider_patient3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -97,8 +102,8 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="8dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_patient_cancel"
@@ -115,6 +120,19 @@
                 android:text="@android:string/cancel"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_patient_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:drawableLeft="@drawable/calendar"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:text="05 JAN 2018"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 </android.support.constraint.ConstraintLayout>

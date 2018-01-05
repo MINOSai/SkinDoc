@@ -8,18 +8,31 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class ResolveBody {
+
+    @SerializedName("token")
+    @Expose
+    private String token;
+
     @SerializedName("user")
     @Expose
     private String user;
 
     @SerializedName("doctor")
     @Expose
-
     private String doctor;
 
-    public ResolveBody(String user, String doctor) {
+    public ResolveBody(String token, String user, String doctor) {
+        this.token = token;
         this.user = user;
         this.doctor = doctor;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getUser() {

@@ -25,7 +25,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,10 +50,12 @@
                 android:id="@+id/txt_chat_left_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
                 android:paddingBottom="8dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="8dp"
-                android:text="04:07 PM" />
+                android:text="04:07 PM"
+                android:textSize="12sp" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
@@ -95,6 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
+                android:layout_marginLeft="8dp"
                 android:gravity="right"
                 android:paddingBottom="8dp"
                 android:paddingLeft="8dp"

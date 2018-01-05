@@ -5,11 +5,18 @@ import com.minosai.skindoc.auth.data.LoginCredentials;
 import com.minosai.skindoc.auth.data.SignupCredentials;
 import com.minosai.skindoc.auth.data.TokenString;
 import com.minosai.skindoc.user.data.api.AppointBody;
+import com.minosai.skindoc.user.data.api.PredictBody;
+import com.minosai.skindoc.user.data.api.PredictResponse;
 import com.minosai.skindoc.user.data.api.ResolveBody;
 
+import java.util.List;
+
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 /**
  * Created by minos.ai on 29/12/17.
@@ -38,5 +45,7 @@ public interface ApiInterface {
     @POST("resolve")
     Call<AuthResponse> resolveAppointment(@Body ResolveBody resolveBody);
 
-    //TODO: define mlpredict
+    @Multipart
+    @POST("mlpredict")
+    Call<PredictResponse> predictImage(@Part MultipartBody.Part file);
 }
