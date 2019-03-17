@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    public static final String BASE_URL = "https://skindoc.herokuapp.com/";
+    public static final String BASE_URL = "https://powerful-beach-29325.herokuapp.com/";
     public static Retrofit retrofit = null;
 
     public static Retrofit getApiClient(){

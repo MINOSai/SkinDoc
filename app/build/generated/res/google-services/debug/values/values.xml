@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">55733305212-ak8qek9fvkuaopqvhcf3qe9utme29np6.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://skindoc-eb5dc.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">55733305212</string>
+    <string name="google_api_key" translatable="false">AIzaSyBdbdabP9JlKO3Na7BNdF_vNRxZWcFMqoE</string>
+    <string name="google_app_id" translatable="false">1:55733305212:android:46bf66950302817f</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBdbdabP9JlKO3Na7BNdF_vNRxZWcFMqoE</string>
+    <string name="google_storage_bucket" translatable="false">skindoc-eb5dc.appspot.com</string>
+    <string name="project_id" translatable="false">skindoc-eb5dc</string>
+</resources>

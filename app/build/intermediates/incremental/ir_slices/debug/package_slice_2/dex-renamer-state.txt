@@ -1,0 +1,4 @@
+#Sun Mar 17 15:21:34 IST 2019
+base.0=/Users/minos.ai/AndroidStudioProjects/SkinDoc/app/build/intermediates/transforms/dexMerger/debug/2
+path.0=classes.dex
+renamed.0=classes.dex

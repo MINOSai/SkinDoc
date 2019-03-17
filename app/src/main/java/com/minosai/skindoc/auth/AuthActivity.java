@@ -20,13 +20,18 @@ public class AuthActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_auth, new AuthFragment(), "AuthFragment");
+        ft.replace(R.id.frame_auth, new AuthFragment());
         ft.addToBackStack("AuthFragmentTag");
         ft.commit();
     }
 
     @Override
     public void onBackPressed() {
-        moveTaskToBack(true);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            moveTaskToBack(true);
+        }
     }
 }

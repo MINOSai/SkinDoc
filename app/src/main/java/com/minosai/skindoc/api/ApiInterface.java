@@ -30,22 +30,22 @@ public interface ApiInterface {
     @POST("signup")
     Call<AuthResponse> signupUser(@Body SignupCredentials signupCredentials);
 
+    @POST("appoint")
+    Call<AuthResponse> newAppointment(@Body AppointBody appointBody);
+
+    @Multipart
+    @POST("mlpredict")
+    Call<PredictResponse> predictImage(@Part MultipartBody.Part file);
+
     @POST("logout")
     Call<AuthResponse> logoutUser(@Body TokenString tokenString);
 
     @POST("oauth")
     Call<AuthResponse> oauthTest(@Body TokenString tokenString);
 
-    @POST("appoint")
-    Call<AuthResponse> newAppointment(@Body AppointBody appointBody);
-
     @POST("new")
     Call<AuthResponse> newToken(@Body TokenString tokenString);
 
     @POST("resolve")
     Call<AuthResponse> resolveAppointment(@Body ResolveBody resolveBody);
-
-    @Multipart
-    @POST("mlpredict")
-    Call<PredictResponse> predictImage(@Part MultipartBody.Part file);
 }

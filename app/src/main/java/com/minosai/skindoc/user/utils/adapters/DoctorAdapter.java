@@ -1,5 +1,6 @@
 package com.minosai.skindoc.user.utils.adapters;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import com.minosai.skindoc.api.ApiInterface;
 import com.minosai.skindoc.auth.data.AuthResponse;
 import com.minosai.skindoc.auth.data.TokenString;
 import com.minosai.skindoc.chat.ChatActivity;
+import com.minosai.skindoc.user.MainActivity;
 import com.minosai.skindoc.user.data.ApDetail;
 import com.minosai.skindoc.user.data.Plist;
 import com.minosai.skindoc.user.data.api.ResolveBody;

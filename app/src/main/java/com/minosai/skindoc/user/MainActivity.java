@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.dismiss();
     }
 
-    private void getNewToken() {
+    public void getNewToken() {
         progressDialog.setMessage("Loading content...");
         progressDialog.show();
 
@@ -342,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
                     if(predictResponse.getMessage().equals("positive")) {
                         predection = "We predicted you might have Melanoma with "+predictResponse.getConfidence()+" confidence";
                     } else {
-                        predection = "We were not able to detect any cancer in your skin.";
+                        predection = "We were not able to detect any cancer in your skin. Confidence: " + predictResponse.getConfidence();
                     }
                     final AlertDialog.Builder builder;
                     builder = new AlertDialog.Builder(MainActivity.this);
